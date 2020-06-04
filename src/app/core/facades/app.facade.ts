@@ -2,24 +2,30 @@ import { Injectable } from '@angular/core';
 import { NavigationCancel, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Store, select } from '@ngrx/store';
 import { combineLatest, merge } from 'rxjs';
-import { filter, map, mapTo, shareReplay, startWith } from 'rxjs/operators';
+import { filter, map, mapTo, shareReplay, startWith, withLatestFrom } from 'rxjs/operators';
 
-import { getAvailableLocales, getCurrentLocale, getDeviceType, getICMBaseURL } from 'ish-core/store/configuration';
+import {
+  getAvailableLocales,
+  getCurrentLocale,
+  getDeviceType,
+  getICMBaseURL,
+  getServerConfigParameter,
+} from 'ish-core/store/configuration';
 import { LoadCountries, getAllCountries, getCountriesLoading } from 'ish-core/store/countries';
 import { getGeneralError, getGeneralErrorType } from 'ish-core/store/error';
 import { LoadRegions, getRegionsByCountryCode } from 'ish-core/store/regions';
+import { getLoggedInCustomer } from 'ish-core/store/user';
 import { getBreadcrumbData, getHeaderType, getWrapperClass, isStickyHeader } from 'ish-core/store/viewconf';
 
 @Injectable({ providedIn: 'root' })
 export class AppFacade {
-  icmBaseUrl: string;
-
   constructor(private store: Store, private router: Router) {
     // tslint:disable-next-line: rxjs-no-ignored-subscribe
     this.routingInProgress$.subscribe();
 
     store.pipe(select(getICMBaseURL)).subscribe(icmBaseUrl => (this.icmBaseUrl = icmBaseUrl));
   }
+  icmBaseUrl: string;
 
   headerType$ = this.store.pipe(select(getHeaderType));
   deviceType$ = this.store.pipe(select(getDeviceType));
@@ -61,6 +67,30 @@ export class AppFacade {
       mapTo(false)
     )
   ).pipe(startWith(true), shareReplay(1));
+
+  /**
+   * selects whether the current application type is 'REST'. If the application type is unknown it returns true
+   */
+  isAppTypeREST$ = this.store.pipe(
+    select(
+      getServerConfigParameter<'intershop.REST' | 'intershop.B2CResponsive' | 'intershop.SMBResponsive'>(
+        'application.applicationType'
+      )
+    ),
+    map(appType => appType === 'intershop.REST' || !appType)
+  );
+
+  customerRestResource$ = this.isAppTypeREST$.pipe(
+    withLatestFrom(this.store.pipe(select(getLoggedInCustomer))),
+    map(([isRest, customer]) => AppFacade.getCustomerRestResource(!customer || customer.isBusinessCustomer, isRest))
+  );
+
+  static getCustomerRestResource(
+    isBusinessCustomer: boolean,
+    isAppTypeREST: boolean
+  ): 'customers' | 'privatecustomers' {
+    return isAppTypeREST && !isBusinessCustomer ? 'privatecustomers' : 'customers';
+  }
 
   countries$() {
     this.store.dispatch(new LoadCountries());
