@@ -39,15 +39,21 @@ export class UsersService {
     }
 
     return this.apiService
-      .post<User>('customers/-/users', {
-        ...body.customer,
-        ...body.user,
-        preferredInvoiceToAddress: { urn: body.user.preferredInvoiceToAddressUrn },
-        preferredShipToAddress: { urn: body.user.preferredShipToAddressUrn },
-        preferredPaymentInstrument: { id: body.user.preferredPaymentInstrumentId },
-        preferredInvoiceToAddressUrn: undefined,
-        preferredShipToAddressUrn: undefined,
-        preferredPaymentInstrumentId: undefined,
+      .post<User>(`customers/${body.customer.customerNo}/users`, {
+        type: 'SMBCustomerUserCollection',
+        name: 'Users',
+        elements: [
+          {
+            ...body.customer,
+            ...body.user,
+            preferredInvoiceToAddress: { urn: body.user.preferredInvoiceToAddressUrn },
+            preferredShipToAddress: { urn: body.user.preferredShipToAddressUrn },
+            preferredPaymentInstrument: { id: body.user.preferredPaymentInstrumentId },
+            preferredInvoiceToAddressUrn: undefined,
+            preferredShipToAddressUrn: undefined,
+            preferredPaymentInstrumentId: undefined,
+          },
+        ],
       })
       .pipe(map(UserMapper.fromData));
   }
@@ -62,7 +68,7 @@ export class UsersService {
     }
 
     return this.apiService
-      .put<User>(`customers/-/users/${customerItemUserKey}`, {
+      .put<User>(`customers/${body.customer.customerNo}/users/${customerItemUserKey}`, {
         ...body.customer,
         ...body.user,
         preferredInvoiceToAddress: { urn: body.user.preferredInvoiceToAddressUrn },

@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>{{ 'account.user.new.heading' | translate }}</h1>
+    <p class="indicates-required"><span class="required">*</span>{{ 'account.required_field.message' | translate }}</p>
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="form-horizontal" novalidate="novalidate">
+      <ish-user-edit-profile [form]="profile" [titles]="titles"></ish-user-edit-profile>
+      <div class="row">
+        <div class="offset-md-4 col-md-8">
+          <button type="submit" class="btn btn-primary" [disabled]="formDisabled">
+            {{ 'account.user.new.button.create.label' | translate }}
+          </button>
+          <a routerLink="/account/users" class="btn btn-secondary">{{ 'account.cancel.link' | translate }}</a>
+        </div>
+      </div>
+    </form>
+  </div>
+  <ish-loading *ngIf="loading$ | async"></ish-loading>
+</div>

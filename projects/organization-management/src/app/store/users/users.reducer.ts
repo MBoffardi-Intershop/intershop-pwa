@@ -21,6 +21,8 @@ const initialState: UsersState = usersAdapter.getInitialState({
 
 export function usersReducer(state = initialState, action: UsersAction): UsersState {
   switch (action.type) {
+    case UsersActionTypes.AddUser:
+    case UsersActionTypes.UpdateUser:
     case UsersActionTypes.DeleteUser:
     case UsersActionTypes.LoadUsers: {
       return {
@@ -28,7 +30,8 @@ export function usersReducer(state = initialState, action: UsersAction): UsersSt
         loading: true,
       };
     }
-
+    case UsersActionTypes.AddUserFail:
+    case UsersActionTypes.UpdateUserFail:
     case UsersActionTypes.DeleteUserFail:
     case UsersActionTypes.LoadUsersFail: {
       const { error } = action.payload;
@@ -48,7 +51,24 @@ export function usersReducer(state = initialState, action: UsersAction): UsersSt
         error: undefined,
       };
     }
+    case UsersActionTypes.AddUserSuccess: {
+      const { newUser } = action.payload;
 
+      return {
+        ...usersAdapter.addOne(newUser, state),
+        loading: false,
+        error: undefined,
+      };
+    }
+    case UsersActionTypes.UpdateUserSuccess: {
+      const { user } = action.payload;
+
+      return {
+        ...usersAdapter.upsertOne(user, state),
+        loading: false,
+        error: undefined,
+      };
+    }
     case UsersActionTypes.DeleteUserSuccess: {
       const { user } = action.payload;
 
