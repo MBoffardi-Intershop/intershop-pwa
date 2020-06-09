@@ -8,7 +8,7 @@ import { coreReducers } from 'ish-core/store/core-store.module';
 import { ngrxTesting } from 'ish-core/utils/dev/ngrx-testing';
 import { LoadingComponent } from 'ish-shared/components/common/loading/loading.component';
 
-import { UserEditProfileComponent } from '../../shared/user-edit-profile/user-edit-profile.component';
+import { UserProfileFormComponent } from '../../shared/user/user-profile-form/user-profile-form.component';
 
 import { UsersEditProfilePageComponent } from './users-edit-profile-page.component';
 
@@ -28,7 +28,7 @@ describe('Users Edit Profile Page Component', () => {
       ],
       declarations: [
         MockComponent(LoadingComponent),
-        MockComponent(UserEditProfileComponent),
+        MockComponent(UserProfileFormComponent),
         UsersEditProfilePageComponent,
       ],
     }).compileComponents();
@@ -70,12 +70,5 @@ describe('Users Edit Profile Page Component', () => {
     expect(component.formDisabled).toBeFalse();
     component.submitForm();
     expect(component.formDisabled).toBeFalse();
-  });
-
-  it('should disable submit button when the user submits an invalid form', () => {
-    fixture.detectChanges();
-    expect(component.formDisabled).toBeFalse();
-    component.submitForm();
-    expect(component.formDisabled).toBeTrue();
   });
 });

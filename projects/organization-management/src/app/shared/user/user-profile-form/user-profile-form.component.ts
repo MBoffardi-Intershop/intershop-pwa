@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'ish-user-edit-profile',
-  templateUrl: './user-edit-profile.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'ish-user-profile-form',
+  templateUrl: './user-profile-form.component.html',
+  changeDetection: ChangeDetectionStrategy.Default,
 })
-export class UserEditProfileComponent {
+export class UserProfileFormComponent {
   @Input() form: FormGroup;
   @Input() titles: string[];
   @Input() editing = false;

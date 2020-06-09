@@ -5,8 +5,6 @@ import { Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 import { AppFacade } from 'ish-core/facades/app.facade';
-import { Customer } from 'ish-core/models/customer/customer.model';
-import { HttpError } from 'ish-core/models/http-error/http-error.model';
 import { Locale } from 'ish-core/models/locale/locale.model';
 import { User } from 'ish-core/models/user/user.model';
 import { whenTruthy } from 'ish-core/utils/operators';
@@ -20,11 +18,8 @@ import { OrganizationManagementFacade } from '../../facades/organization-managem
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersCreatePageComponent implements OnInit {
-  users$: Observable<User[]>;
-  error$: Observable<HttpError>;
   loading$: Observable<boolean>;
   currentLocale$: Observable<Locale>;
-  currentCustomer$: Observable<Customer>;
 
   titles: string[];
   currentCountryCode = '';
@@ -38,9 +33,6 @@ export class UsersCreatePageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentCustomer$ = this.organizationManagementFacade.customer$;
-    this.users$ = this.organizationManagementFacade.users$();
-    this.error$ = this.organizationManagementFacade.usersError$;
     this.loading$ = this.organizationManagementFacade.usersLoading$;
     this.currentLocale$ = this.appFacade.currentLocale$;
 
@@ -80,14 +72,6 @@ export class UsersCreatePageComponent implements OnInit {
 
   get profile() {
     return this.form.get('profile');
-  }
-
-  get rolesPermissions() {
-    return this.form.get('rolesPermissions');
-  }
-
-  get budgetLimits() {
-    return this.form.get('budgetLimits');
   }
 
   submitForm() {

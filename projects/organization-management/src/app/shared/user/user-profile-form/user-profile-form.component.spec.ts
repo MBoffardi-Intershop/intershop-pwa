@@ -9,11 +9,11 @@ import { ngrxTesting } from 'ish-core/utils/dev/ngrx-testing';
 import { InputComponent } from 'ish-shared/forms/components/input/input.component';
 import { SelectTitleComponent } from 'ish-shared/forms/components/select-title/select-title.component';
 
-import { UserEditProfileComponent } from './user-edit-profile.component';
+import { UserProfileFormComponent } from './user-profile-form.component';
 
-describe('User Edit Profile Component', () => {
-  let component: UserEditProfileComponent;
-  let fixture: ComponentFixture<UserEditProfileComponent>;
+describe('User Profile Form Component', () => {
+  let component: UserProfileFormComponent;
+  let fixture: ComponentFixture<UserProfileFormComponent>;
   let element: HTMLElement;
 
   beforeEach(async(() => {
@@ -24,12 +24,12 @@ describe('User Edit Profile Component', () => {
         TranslateModule.forRoot(),
         ngrxTesting({ reducers: coreReducers }),
       ],
-      declarations: [MockComponent(InputComponent), MockComponent(SelectTitleComponent), UserEditProfileComponent],
+      declarations: [MockComponent(InputComponent), MockComponent(SelectTitleComponent), UserProfileFormComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UserEditProfileComponent);
+    fixture = TestBed.createComponent(UserProfileFormComponent);
     component = fixture.componentInstance;
     element = fixture.nativeElement;
   });
@@ -38,5 +38,18 @@ describe('User Edit Profile Component', () => {
     expect(component).toBeTruthy();
     expect(element).toBeTruthy();
     expect(() => fixture.detectChanges()).not.toThrow();
+  });
+
+  it('should display form input fields on creation', () => {
+    fixture.detectChanges();
+    if (component.editing) {
+      expect(element.querySelector('[controlname=login]')).toBeTruthy();
+      expect(element.querySelector('[controlname=email]')).toBeTruthy();
+    }
+    expect(element.querySelector('[controlname=firstName]')).toBeTruthy();
+    expect(element.querySelector('[controlname=lastName]')).toBeTruthy();
+    expect(element.querySelector('[controlname=department]')).toBeTruthy();
+    expect(element.querySelector('[controlname=phone]')).toBeTruthy();
+    expect(element.querySelector('[controlname=fax]')).toBeTruthy();
   });
 });

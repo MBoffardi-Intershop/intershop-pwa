@@ -11,7 +11,7 @@ import { ngrxTesting } from 'ish-core/utils/dev/ngrx-testing';
 import { LoadingComponent } from 'ish-shared/components/common/loading/loading.component';
 
 import { OrganizationManagementFacade } from '../../facades/organization-management.facade';
-import { UserEditProfileComponent } from '../../shared/user-edit-profile/user-edit-profile.component';
+import { UserProfileFormComponent } from '../../shared/user/user-profile-form/user-profile-form.component';
 
 import { UsersCreatePageComponent } from './users-create-page.component';
 
@@ -30,7 +30,7 @@ describe('Users Create Page Component', () => {
       ],
       declarations: [
         MockComponent(LoadingComponent),
-        MockComponent(UserEditProfileComponent),
+        MockComponent(UserProfileFormComponent),
         UsersCreatePageComponent,
       ],
       providers: [

@@ -2,8 +2,8 @@
   <div class="col-md-12">
     <h1>{{ 'account.user.new.heading' | translate }}</h1>
     <p class="indicates-required"><span class="required">*</span>{{ 'account.required_field.message' | translate }}</p>
-    <form [formGroup]="form" (ngSubmit)="submitForm()" class="form-horizontal" novalidate="novalidate">
-      <ish-user-edit-profile [form]="profile" [titles]="titles"></ish-user-edit-profile>
+    <form *ngIf="form" [formGroup]="form" (ngSubmit)="submitForm()" class="form-horizontal" novalidate="novalidate">
+      <ish-user-profile-form [form]="profile" [titles]="titles"></ish-user-profile-form>
       <div class="row">
         <div class="offset-md-4 col-md-8">
           <button type="submit" class="btn btn-primary" [disabled]="formDisabled">
