@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { instance, mock, verify, when } from 'ts-mockito';
 
@@ -16,13 +17,14 @@ describe('Users Effects', () => {
   let actions$: Observable<Action>;
   let effects: UsersEffects;
   let usersService: UsersService;
+  let store$: Store;
 
   beforeEach(() => {
     usersService = mock(UsersService);
-    when(usersService.getUsers()).thenReturn(of([{ businessPartnerNo: '1' }, { businessPartnerNo: '2' }] as User[]));
+    when(usersService.getUsers()).thenReturn(of([{ login: '1' }, { login: '2' }] as User[]));
 
     TestBed.configureTestingModule({
-      imports: [ngrxTesting()],
+      imports: [TranslateModule.forRoot(), ngrxTesting()],
       providers: [
         UsersEffects,
         provideMockActions(() => actions$),
@@ -31,6 +33,7 @@ describe('Users Effects', () => {
     });
 
     effects = TestBed.inject(UsersEffects);
+    store$ = TestBed.inject(Store);
   });
 
   describe('loadUsers$', () => {
@@ -49,7 +52,24 @@ describe('Users Effects', () => {
       effects.loadUsers$.subscribe(action => {
         expect(action).toMatchInlineSnapshot(`
           [Users API] Load Users Success:
-            users: [{"businessPartnerNo":"1"},{"businessPartnerNo":"2"}]
+            users: [{"login":"1"},{"login":"2"}]
+        `);
+        done();
+      });
+    });
+  });
+
+  describe('setOrderBreadcrumb$', () => {
+    beforeEach(() => {
+      store$.dispatch(new actions.LoadUsersSuccess({ users: [{ login: '1' }, { login: '2' }] }));
+      // store$.dispatch(new actions.({login: "1"}));
+    });
+
+    // tslint:disable-next-line:no-disabled-tests
+    xit('should set the breadcrumb of user detail', done => {
+      effects.setUserDetailBreadcrumb$.subscribe(action => {
+        expect(action.payload).toMatchInlineSnapshot(`
+
         `);
         done();
       });
